@@ -6,7 +6,7 @@ parameters:
   to:
     type: string
     default: "World"
-    description: "Hello to whaaaom?"
+    description: "Hello to whaaaom?!"
 steps:
   - run:
       environment:
