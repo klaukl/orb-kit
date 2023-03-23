@@ -34,8 +34,8 @@ steps:
   - slack/notify:
       channel: sdp-test-report
       event: pass
-      template: SLACK_PASS_TEMPLATE
+      template: &SLACK_PASS_TEMPLATE
   - slack/notify:
       channel: sdp-test-report
       event: fail
-      template: SLACK_FAIL_TEMPLATE
+      template: &SLACK_FAIL_TEMPLATE
