@@ -1,0 +1,51 @@
+description: >
+  Sample description
+# What will this job do?
+
+executor: newman
+
+parameters:
+  be_url:
+    default: ""
+    description: The backend URL for testing
+    type: string
+steps:
+  - run:
+      name: "Wake test target"
+      command: |
+        curl << parameters.be_url >> -s -S --max-time 1000 --write-out '%{http_code}' --output /dev/null;
+  - run:
+      name: Set up Environment variables
+      command: |
+          echo 'export BE_BASE_URL="<< parameters.be_url >>"' >> $BASH_ENV
+  - run: 
+      name: "Install dependencies"
+      command: |
+        # apk add curl
+        npm install -g newman newman-reporter-htmlextra
+  - jq/install
+  - checkout
+  - run:
+      name: "Run Newman API tests"
+      command: |
+        if [ -e tests/newman/tide.collection.json ]
+        then
+          for collection in tests/newman/*.collection.json
+          do
+            echo "==> Running Postman collection:" ${collection}
+
+            case ${CIRCLE_BRANCH} in
+              standby|production|prod-left|prod-right)
+                newman run ${collection} --folder default -e tests/newman/tide.environment.json --env-var "host=<< parameters.be_url >>" --env-var "branch=${CIRCLE_BRANCH}" --color on -r htmlextra --reporter-htmlextra-export ./report/${collection}_report.html;;
+              *)
+                newman run ${collection} -e tests/newman/tide.environment.json --env-var "host=<< parameters.be_url >>" --env-var "branch=${CIRCLE_BRANCH}" --color on -r htmlextra --reporter-htmlextra-export ./report/${collection}_report.html;;
+            esac
+            
+          done
+        else
+          echo "==> No Postman API test collection is found. Skip the test."
+        fi
+  - store_artifacts:
+      path: report
+  - notify_slack:
+      type: newman
