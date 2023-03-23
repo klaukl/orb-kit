@@ -1,0 +1,40 @@
+&slack_fail_template |
+        {
+          "attachments": [
+            {
+              "color": "#f44336",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_ENVIRONMENTS"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":bangbang: *$REPORT_LINKS*"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "@releaseqa Please investigate."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
