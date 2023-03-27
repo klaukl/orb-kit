@@ -1,7 +1,5 @@
 description: >
-  Sample description
-# What will this job do?
-
+  Run Postman Newman API tests on the backend app.
 executor: newman
 
 parameters:
