@@ -8,7 +8,7 @@ docker:
     password: $E2E_DOCKERHUB_PASSWORD
 environment:
   TESTID: 'fixture'
-  SLACK_PASS_TEMPLATE: *slack_pass_template
-  SLACK_FAIL_TEMPLATE: *slack_fail_template
+  # SLACK_PASS_TEMPLATE: *slack_pass_template
+  # SLACK_FAIL_TEMPLATE: *slack_fail_template
   TEST_TYPE: ':nightwatch:'
 working_directory: /app
