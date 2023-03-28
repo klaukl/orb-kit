@@ -16,7 +16,7 @@ steps:
       name: Set up Environment variables
       command: |
           echo 'export BE_BASE_URL="<< parameters.be_url >>"' >> $BASH_ENV
-  - run: 
+  - run:
       name: "Install dependencies"
       command: |
         # apk add curl
@@ -38,7 +38,6 @@ steps:
               *)
                 newman run ${collection} -e tests/newman/tide.environment.json --env-var "host=<< parameters.be_url >>" --env-var "branch=${CIRCLE_BRANCH}" --color on -r htmlextra --reporter-htmlextra-export ./report/${collection}_report.html;;
             esac
-            
           done
         else
           echo "==> No Postman API test collection is found. Skip the test."

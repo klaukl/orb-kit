@@ -71,7 +71,7 @@ steps:
       paths:
         - node_modules
   - when:
-      condition: 
+      condition:
         equal: [false, << parameters.fe_only >>]
       steps:
         - run:
