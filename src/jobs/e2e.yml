@@ -1,0 +1,50 @@
+description: >
+  Run e2e tests on the frontend app.
+
+executor: e2e
+parameters:
+  project:
+    default: ""
+    description: Lagoon project name
+    type: string
+  be_url:
+    default: ""
+    description: The backend URL for testing
+    type: string
+  fe_url:
+    default: ""
+    description: The frontend URL for testing
+    type: string
+  browser:
+    type: string
+    description: Browser, default to headless Chrome. If it's set to any other browser, BrowserStack user key will be required.
+    default: "chrome_headless"
+steps:
+  - run:
+      name: "Check if it's a mobile device"
+      command: |
+        case << parameters.browser >> in
+          androidChrome|iphoneSafari)
+            echo 'export NOT_DEVICE="@desktop"' >> $BASH_ENV;;
+          *)
+            echo 'export NOT_DEVICE="@mobile"' >> $BASH_ENV;;
+        esac
+  - run:
+      name: "Check if it's PR env frontend"
+      command: |
+        PR_ENV_REGEX=".*.pr-"
+        if [[ $(expr match "<< parameters.fe_url >>" $PR_ENV_REGEX) != 0 ]]; then
+          echo 'export SKIP_PR=" and not @skip-pr"' >> $BASH_ENV
+          echo "PR env detected - adding @skip-pr tag to skip tests"
+        else
+          echo 'export SKIP_PR=""' >> $BASH_ENV
+          echo "PR env not detected"
+        fi
+  - run_e2e:
+      tags: "(@core or @<< parameters.project >>) and @regression and not ${NOT_DEVICE}${SKIP_PR}"
+      project: << parameters.project >>
+      be_url: << parameters.be_url >>
+      fe_url: << parameters.fe_url >>
+      browser: << parameters.browser >>
+      fe_only: true
+  - notify_slack

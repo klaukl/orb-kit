@@ -1,0 +1,35 @@
+description: >
+  Run e2e tests on the backend app.
+
+executor: e2e
+parameters:
+  project:
+    default: ""
+    description: Lagoon project name
+    type: string
+  be_url:
+    default: ""
+    description: The backend URL for testing
+    type: string
+  browser:
+    type: string
+    description: Browser, default to headless Chrome. If it's set to any other browser, BrowserStack user key will be required.
+    default: "chrome_headless"
+steps:
+  - run:
+      name: "Check if it's PR env backend"
+      command: |
+        PR_ENV_REGEX=".*.pr-"
+        if [[ $(expr match "<< parameters.be_url >>" $PR_ENV_REGEX) != 0 ]]; then
+          echo 'export SKIP_PR=" and not @skip-pr"' >> $BASH_ENV
+          echo "PR env detected - adding @skip-pr tag to skip tests"
+        else
+          echo 'export SKIP_PR=""' >> $BASH_ENV
+          echo "PR env not detected"
+        fi
+  - run_e2e_be:
+      tags: "(@core or @<< parameters.project >>) and @regression${SKIP_PR}"
+      project: << parameters.project >>
+      be_url: << parameters.be_url >>
+      browser: << parameters.browser >>
+  - notify_slack
