@@ -32,6 +32,7 @@ steps:
         fi
   - run:
       name: Set up template env var
+      command: echo $SLACK_PASS_TEMPLATE
       environment:
         SLACK_PASS_TEMPLATE: |
           {
