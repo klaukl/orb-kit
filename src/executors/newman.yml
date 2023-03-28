@@ -7,6 +7,22 @@ docker:
     username: $DOCKERHUB_USERNAME
     password: $DOCKERHUB_PASSWORD
 environment:
-  # SLACK_PASS_TEMPLATE: *slack_pass_template
+  SLACK_PASS_TEMPLATE: |
+          {
+            "attachments": [
+              {
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "This is a plain text section block.",
+                      "emoji": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
   # SLACK_FAIL_TEMPLATE: *slack_fail_template
   TEST_TYPE: ':postman:'
