@@ -33,6 +33,8 @@ steps:
   - run:
       name: Set up template env var
       when: always
+      command: |
+        echo 'hello'
       # SLACK_PASS_TEMPLATE: |
       #  {
       #     "attachments": [
