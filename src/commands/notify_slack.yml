@@ -103,8 +103,7 @@ steps:
       #       }
       #     ]
       #   }
-      
-        
+
   - get_reports_for_slack:
       type: << parameters.type >>
   # - slack/notify:
