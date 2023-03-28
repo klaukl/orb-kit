@@ -34,36 +34,36 @@ steps:
       name: Set up template env var
       environment:
         SLACK_PASS_TEMPLATE: |
-       {
-          "attachments": [
-            {
-              "color": "#14b942",
-              "blocks": [
+          {
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "$TEST_ENVIRONMENTS"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":white_check_mark: *$REPORT_LINKS*"
-                  }
+                  "color": "#14b942",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "$TEST_ENVIRONMENTS"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": ":white_check_mark: *$REPORT_LINKS*"
+                      }
+                    }
+                  ]
                 }
               ]
             }
-          ]
-        }
       # SLACK_FAIL_TEMPLATE: |
       #  {
       #     "attachments": [
@@ -107,10 +107,10 @@ steps:
 
   - get_reports_for_slack:
       type: << parameters.type >>
-  # - slack/notify:
-  #     channel: sdp-test-report
-  #     event: pass
-  #     template: SLACK_PASS_TEMPLATE
+  - slack/notify:
+      channel: sdp-test-report
+      event: pass
+      template: SLACK_PASS_TEMPLATE
   # - slack/notify:
   #     channel: sdp-test-report
   #     event: fail
