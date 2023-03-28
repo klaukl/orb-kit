@@ -32,40 +32,37 @@ steps:
         fi
   - run:
       name: Set up template env var
-      when: always
-      command: |
-        echo 'hello'
-      # SLACK_PASS_TEMPLATE: |
-      #  {
-      #     "attachments": [
-      #       {
-      #         "color": "#14b942",
-      #         "blocks": [
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "$TEST_ENVIRONMENTS"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": ":white_check_mark: *$REPORT_LINKS*"
-      #             }
-      #           }
-      #         ]
-      #       }
-      #     ]
-      #   }
+      SLACK_PASS_TEMPLATE: |
+       {
+          "attachments": [
+            {
+              "color": "#14b942",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_ENVIRONMENTS"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: *$REPORT_LINKS*"
+                  }
+                }
+              ]
+            }
+          ]
+        }
       # SLACK_FAIL_TEMPLATE: |
       #  {
       #     "attachments": [
