@@ -65,46 +65,46 @@ steps:
                 }
               ]
             }
-      # SLACK_FAIL_TEMPLATE: |
-      #  {
-      #     "attachments": [
-      #       {
-      #         "color": "#f44336",
-      #         "blocks": [
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "$TEST_ENVIRONMENTS"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": ":bangbang: *$REPORT_LINKS*"
-      #             }
-      #           },
-      #           {
-      #             "type": "context",
-      #             "elements": [
-      #               {
-      #                 "type": "mrkdwn",
-      #                 "text": "@releaseqa Please investigate."
-      #               }
-      #             ]
-      #           }
-      #         ]
-      #       }
-      #     ]
-      #   }
+      SLACK_FAIL_TEMPLATE: |
+       {
+          "attachments": [
+            {
+              "color": "#f44336",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$TEST_ENVIRONMENTS"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":bangbang: *$REPORT_LINKS*"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "@releaseqa Please investigate."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
 
   - get_reports_for_slack:
       type: << parameters.type >>
@@ -112,7 +112,7 @@ steps:
       channel: sdp-test-report
       event: pass
       template: SLACK_PASS_TEMPLATE
-  # - slack/notify:
-  #     channel: sdp-test-report
-  #     event: fail
-  #     template: SLACK_FAIL_TEMPLATE
+  - slack/notify:
+      channel: sdp-test-report
+      event: fail
+      template: SLACK_FAIL_TEMPLATE
