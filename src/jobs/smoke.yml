@@ -31,7 +31,7 @@ steps:
           *)
             echo 'export SMOKE_TAG="@smoke"' >> $BASH_ENV;;
         esac
-  - folder1/run_e2e:
+  - run_e2e:
       tags: "(${SMOKE_TAG} and @core) or (${SMOKE_TAG} and @<< parameters.project >>)"
       project: << parameters.project >>
       be_url: << parameters.be_url >>
