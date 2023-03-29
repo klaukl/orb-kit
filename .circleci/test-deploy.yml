@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  v2test: klsdp/v2test@dev:<<pipeline.git.revision>>
+  sdp-test: dpc-sdp/sdp-test@dev:<<pipeline.git.revision>>
   orb-tools: circleci/orb-tools@11.5
 
 filters: &filters
@@ -26,7 +26,7 @@ workflows:
       - orb-tools/pack:
           filters: *filters
       - orb-tools/publish:
-          orb-name: klsdp/v2test
+          orb-name: dpc-sdp/sdp-test
           vcs-type: << pipeline.project.type >>
           pub-type: production
           requires:
