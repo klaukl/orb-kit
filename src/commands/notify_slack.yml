@@ -14,14 +14,112 @@ steps:
   #     when: always
   #     command: |
   #       echo $SLACK_PASS_TEMPLATE
+  # - run:
+  #     name: Set up template env var
+  #     when: always
+  #     command: |
+  #       echo $SLACK_PASS_TEMPLATE
+  #       echo $SLACK_FAIL_TEMPLATE
+  #     environment:
+  #       SLACK_PASS_TEMPLATE: |
+  #         {
+  #             "attachments": [
+  #               {
+  #                 "color": "#14b942",
+  #                 "blocks": [
+  #                   {
+  #                     "type": "section",
+  #                     "text": {
+  #                       "type": "mrkdwn",
+  #                       "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
+  #                     }
+  #                   },
+  #                   {
+  #                     "type": "section",
+  #                     "text": {
+  #                       "type": "mrkdwn",
+  #                       "text": "$TEST_ENVIRONMENTS"
+  #                     }
+  #                   },
+  #                   {
+  #                     "type": "section",
+  #                     "text": {
+  #                       "type": "mrkdwn",
+  #                       "text": ":white_check_mark: *$REPORT_LINKS*"
+  #                     }
+  #                   }
+  #                 ]
+  #               }
+  #             ]
+  #           }
+  #     SLACK_FAIL_TEMPLATE: |
+  #       {
+  #           "attachments": [
+  #             {
+  #               "color": "#f44336",
+  #               "blocks": [
+  #                 {
+  #                   "type": "section",
+  #                   "text": {
+  #                     "type": "mrkdwn",
+  #                     "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
+  #                   }
+  #                 },
+  #                 {
+  #                   "type": "section",
+  #                   "text": {
+  #                     "type": "mrkdwn",
+  #                     "text": "$TEST_ENVIRONMENTS"
+  #                   }
+  #                 },
+  #                 {
+  #                   "type": "section",
+  #                   "text": {
+  #                     "type": "mrkdwn",
+  #                     "text": ":bangbang: *$REPORT_LINKS*"
+  #                   }
+  #                 },
+  #                 {
+  #                   "type": "context",
+  #                   "elements": [
+  #                     {
+  #                       "type": "mrkdwn",
+  #                       "text": "@releaseqa Please investigate."
+  #                     }
+  #                   ]
+  #                 }
+  #               ]
+  #             }
+  #           ]
+  #         }
   - run:
-      name: Set up template env var
+      name: Set up report details
       when: always
       command: |
-        echo $SLACK_PASS_TEMPLATE
-        echo $SLACK_FAIL_TEMPLATE
-      environment:
-        SLACK_PASS_TEMPLATE: |
+        # Github repo link (turns CIRCLE_REPOSITORY_URL into a https URL)
+        REPOSITORY_URL_TMP="$(echo "${CIRCLE_REPOSITORY_URL/git@github.com:/https://github.com/}")"
+        echo "read -r -d '' GITHUB_REPOSITORY_URL \<< 'EOF'" >> $BASH_ENV
+        echo "${REPOSITORY_URL_TMP/.git/}" >> $BASH_ENV
+        echo "EOF" >> $BASH_ENV
+        # Github branch or pull request link
+        if [[ -z $CIRCLE_PULL_REQUEST ]]; then
+          echo 'export BRANCH_LINK="<$GITHUB_REPOSITORY_URL/tree/$CIRCLE_BRANCH|$CIRCLE_BRANCH>"' >> $BASH_ENV
+        else
+          echo 'export BRANCH_LINK="<$CIRCLE_PULL_REQUEST|$CIRCLE_BRANCH>"' >> $BASH_ENV
+        fi
+        # Test environment links
+        if [[ -z $FE_BASE_URL ]]; then
+          echo 'export TEST_ENVIRONMENTS="*BE URL:* $BE_BASE_URL"' >> $BASH_ENV
+        else
+          echo 'export TEST_ENVIRONMENTS="*BE URL:* $BE_BASE_URL \n *FE URL:* $FE_BASE_URL"' >> $BASH_ENV
+        fi
+
+  - get_reports_for_slack:
+      type: << parameters.type >>
+  - slack/notify:
+      channel: sdp-test-report
+      event: pass
+      custom: |
           {
               "attachments": [
                 {
@@ -52,7 +150,10 @@ steps:
                 }
               ]
             }
-      SLACK_FAIL_TEMPLATE: |
+  - slack/notify:
+      channel: sdp-test-report
+      event: fail
+      custom:
         {
             "attachments": [
               {
@@ -92,35 +193,3 @@ steps:
               }
             ]
           }
-  - run:
-      name: Set up report details
-      when: always
-      command: |
-        # Github repo link (turns CIRCLE_REPOSITORY_URL into a https URL)
-        REPOSITORY_URL_TMP="$(echo "${CIRCLE_REPOSITORY_URL/git@github.com:/https://github.com/}")"
-        echo "read -r -d '' GITHUB_REPOSITORY_URL \<< 'EOF'" >> $BASH_ENV
-        echo "${REPOSITORY_URL_TMP/.git/}" >> $BASH_ENV
-        echo "EOF" >> $BASH_ENV
-        # Github branch or pull request link
-        if [[ -z $CIRCLE_PULL_REQUEST ]]; then
-          echo 'export BRANCH_LINK="<$GITHUB_REPOSITORY_URL/tree/$CIRCLE_BRANCH|$CIRCLE_BRANCH>"' >> $BASH_ENV
-        else
-          echo 'export BRANCH_LINK="<$CIRCLE_PULL_REQUEST|$CIRCLE_BRANCH>"' >> $BASH_ENV
-        fi
-        # Test environment links
-        if [[ -z $FE_BASE_URL ]]; then
-          echo 'export TEST_ENVIRONMENTS="*BE URL:* $BE_BASE_URL"' >> $BASH_ENV
-        else
-          echo 'export TEST_ENVIRONMENTS="*BE URL:* $BE_BASE_URL \n *FE URL:* $FE_BASE_URL"' >> $BASH_ENV
-        fi
-
-  - get_reports_for_slack:
-      type: << parameters.type >>
-  - slack/notify:
-      channel: sdp-test-report
-      event: pass
-      template: SLACK_PASS_TEMPLATE
-  - slack/notify:
-      channel: sdp-test-report
-      event: fail
-      template: SLACK_FAIL_TEMPLATE
