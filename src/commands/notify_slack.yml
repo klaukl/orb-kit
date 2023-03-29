@@ -9,12 +9,11 @@ parameters:
     default: "cucumber"
 
 steps:
-  # - run:
-  #     name: Set up template env var
-  #     when: always
-  #     command: |
-  #       echo 'export SLACK_PASS_TEMPLATE=$(cat ./src/templates/SLACK_PASS_TEMPLATE.json)' >> $BASH_ENV
-  #       echo $SLACK_PASS_TEMPLATE
+  - run:
+      name: Set up template env var
+      when: always
+      command: |
+        echo $SLACK_PASS_TEMPLATE
   # - run:
   #     name: Set up template env var
   #     when: always
