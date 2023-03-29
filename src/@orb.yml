@@ -16,5 +16,5 @@ parameters:
 # If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
 orbs:
   browser-tools: circleci/browser-tools@1.4.1
-  slack: circleci/slack@4.12.1
+  slack: circleci/slack@4.11.0
   jq: circleci/jq@2.2.0
