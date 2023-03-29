@@ -13,7 +13,7 @@ steps:
       name: Set up template env var
       when: always
       command: |
-        echo ${{SLACK_PASS_TEMPLATE}}
+        echo "<< pipeline.filepath >>"
   # - run:
   #     name: Set up template env var
   #     when: always
