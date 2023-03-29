@@ -18,8 +18,8 @@ steps:
       name: Set up template env var
       when: always
       command: |
-        echo $SLACK_PASS_TEMPLATE
-        echo $SLACK_FAIL_TEMPLATE
+        echo "SLACK_PASS_TEMPLATE" >> $BASH_ENV
+        echo "SLACK_FAIL_TEMPLATE" >> $BASH_ENV
       environment:
         SLACK_PASS_TEMPLATE: |
           {
