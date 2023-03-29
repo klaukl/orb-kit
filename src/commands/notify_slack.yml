@@ -117,7 +117,7 @@ steps:
   - get_reports_for_slack:
       type: << parameters.type >>
   - slack/notify:
-      channel: sdp-test-report
+      channel: sdp-test-report-dev
       event: pass
       custom: |
             {
@@ -151,7 +151,7 @@ steps:
               ]
             }
   - slack/notify:
-      channel: sdp-test-report
+      channel: sdp-test-report-dev
       event: fail
       custom: |
           {
