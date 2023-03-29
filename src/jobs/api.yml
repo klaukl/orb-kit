@@ -44,5 +44,5 @@ steps:
         fi
   - store_artifacts:
       path: report
-  - notify_slack:
+  - folder1/notify_slack:
       type: newman

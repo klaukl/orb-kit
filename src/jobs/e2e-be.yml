@@ -27,7 +27,7 @@ steps:
           echo 'export SKIP_PR=""' >> $BASH_ENV
           echo "PR env not detected"
         fi
-  - run_e2e_be:
+  - folder1/run_e2e_be:
       tags: "(@core or @<< parameters.project >>) and @regression${SKIP_PR}"
       project: << parameters.project >>
       be_url: << parameters.be_url >>
