@@ -9,89 +9,89 @@ parameters:
     default: "cucumber"
 
 steps:
-  - run:
-      name: Set up template env var
-      when: always
-      command: |
-        echo $SLACK_PASS_TEMPLATE
   # - run:
   #     name: Set up template env var
   #     when: always
   #     command: |
   #       echo $SLACK_PASS_TEMPLATE
-  #       echo $SLACK_FAIL_TEMPLATE
-  #     environment:
-  #       SLACK_PASS_TEMPLATE: |
-          # {
-          #     "attachments": [
-          #       {
-          #         "color": "#14b942",
-          #         "blocks": [
-          #           {
-          #             "type": "section",
-          #             "text": {
-          #               "type": "mrkdwn",
-          #               "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
-          #             }
-          #           },
-          #           {
-          #             "type": "section",
-          #             "text": {
-          #               "type": "mrkdwn",
-          #               "text": "$TEST_ENVIRONMENTS"
-          #             }
-          #           },
-          #           {
-          #             "type": "section",
-          #             "text": {
-          #               "type": "mrkdwn",
-          #               "text": ":white_check_mark: *$REPORT_LINKS*"
-          #             }
-          #           }
-          #         ]
-          #       }
-          #     ]
-          #   }
-  #     SLACK_FAIL_TEMPLATE: |
-  #       {
-  #           "attachments": [
-  #             {
-  #               "color": "#f44336",
-  #               "blocks": [
-  #                 {
-  #                   "type": "section",
-  #                   "text": {
-  #                     "type": "mrkdwn",
-  #                     "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
-  #                   }
-  #                 },
-  #                 {
-  #                   "type": "section",
-  #                   "text": {
-  #                     "type": "mrkdwn",
-  #                     "text": "$TEST_ENVIRONMENTS"
-  #                   }
-  #                 },
-  #                 {
-  #                   "type": "section",
-  #                   "text": {
-  #                     "type": "mrkdwn",
-  #                     "text": ":bangbang: *$REPORT_LINKS*"
-  #                   }
-  #                 },
-  #                 {
-  #                   "type": "context",
-  #                   "elements": [
-  #                     {
-  #                       "type": "mrkdwn",
-  #                       "text": "@releaseqa Please investigate."
-  #                     }
-  #                   ]
-  #                 }
-  #               ]
-  #             }
-  #           ]
-  #         }
+  - run:
+      name: Set up template env var
+      when: always
+      command: |
+        echo $SLACK_PASS_TEMPLATE
+        echo $SLACK_FAIL_TEMPLATE
+      environment:
+        SLACK_PASS_TEMPLATE: |
+          {
+              "attachments": [
+                {
+                  "color": "#14b942",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has passed.*"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "$TEST_ENVIRONMENTS"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": ":white_check_mark: *$REPORT_LINKS*"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+      SLACK_FAIL_TEMPLATE: |
+        {
+            "attachments": [
+              {
+                "color": "#f44336",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "$TEST_TYPE$TEST_SUBTYPE *<$GITHUB_REPOSITORY_URL|$CIRCLE_PROJECT_REPONAME> - Test <$CIRCLE_BUILD_URL|${CIRCLE_JOB}> on $BRANCH_LINK has failed.*"
+                    }
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "$TEST_ENVIRONMENTS"
+                    }
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": ":bangbang: *$REPORT_LINKS*"
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "elements": [
+                      {
+                        "type": "mrkdwn",
+                        "text": "@releaseqa Please investigate."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
   - run:
       name: Set up report details
       when: always

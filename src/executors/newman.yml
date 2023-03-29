@@ -7,7 +7,7 @@ docker:
     username: $DOCKERHUB_USERNAME
     password: $DOCKERHUB_PASSWORD
 environment:
-  SLACK_PASS_TEMPLATE: |
-    <<include(templates/slack_pass_template.json)>>
+  # SLACK_PASS_TEMPLATE: |
+  #   <<include(templates/slack_pass_template.json)>>
   # SLACK_FAIL_TEMPLATE: *slack_fail_template
   TEST_TYPE: ':postman:'
