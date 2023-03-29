@@ -1,0 +1,46 @@
+description: >
+  This command echos "Hello World" using file inclusion.
+# What will this command do?
+# Descriptions should be short, simple, and clear.
+parameters:
+  type:
+    type: string
+    description: type of tests
+    default: ""
+steps:
+  - run:
+      name: Get artifacts
+      when: always
+      command: |
+        echo https://circleci.com/api/v2/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts
+        artifacts=$(curl -X GET "https://circleci.com/api/v2/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts" \
+        -H "Accept: application/json" \
+        -u "$CIRCLE_TOKEN:")
+        htmlreports=$(jq '.items[] | select(.url | contains("html"))' \<<< "$artifacts")
+        REPORTS=$(jq -s '.' \<<< $htmlreports)
+        COUNT=$(jq -s '. | length' \<<< $htmlreports)
+        # We may will have more than 2 reports in API testing but I'll leave it for now.
+        if [[ $COUNT -eq 2 ]]
+        then
+          echo "Two Reports Found"
+          REPORTURL1=$(jq --raw-output '.[0].url' \<<< $REPORTS)
+          REPORTURL2=$(jq --raw-output '.[1].url' \<<< $REPORTS)
+          if [[ "<< parameters.type >>" == "cucumber" ]]
+          then
+            REPORT_LINKS="<${REPORTURL1}|BE Test Report> | <${REPORTURL2}|FE Test Report>"
+          else
+            REPORT_LINKS="<${REPORTURL1}|Test Report 1> | <${REPORTURL2}|Test Report 2>"
+          fi
+        elif [[ $COUNT -eq 1 ]]
+        then
+          echo "One Report Found"
+          REPORTURL=$(jq --raw-output '.[0].url' \<<< $REPORTS)
+          REPORT_LINKS="<${REPORTURL}| Test Report>"
+        else
+          echo "No Report Found"
+          REPORT_LINKS=":crying_cat_face: No report was generated, unfortunately."
+        fi
+
+        echo "read -r -d '' REPORT_LINKS \<< 'EOF_REPORT'" >> $BASH_ENV
+        echo "$REPORT_LINKS" >> $BASH_ENV
+        echo "EOF_REPORT" >> $BASH_ENV
