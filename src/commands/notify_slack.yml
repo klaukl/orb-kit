@@ -13,7 +13,7 @@ steps:
       name: Set up template env var
       when: always
       command: |
-        echo "\<< pipeline.filepath("src/templates/slack_pass_template.json") >>"
+        echo $SLACK_PASS_TEMPLATE
   # - run:
   #     name: Set up template env var
   #     when: always
