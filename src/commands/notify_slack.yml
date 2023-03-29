@@ -119,6 +119,7 @@ steps:
   - slack/notify:
       channel: sdp-test-report-dev
       event: pass
+      debug: true
       custom: |
             {
               "attachments": [
@@ -153,6 +154,7 @@ steps:
   - slack/notify:
       channel: sdp-test-report-dev
       event: fail
+      debug: true
       custom: |
           {
             "attachments": [
