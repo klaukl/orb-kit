@@ -120,7 +120,7 @@ steps:
       channel: sdp-test-report
       event: pass
       custom: |
-          {
+            {
               "attachments": [
                 {
                   "color": "#14b942",
@@ -153,8 +153,8 @@ steps:
   - slack/notify:
       channel: sdp-test-report
       event: fail
-      custom:
-        {
+      custom: |
+          {
             "attachments": [
               {
                 "color": "#f44336",
