@@ -9,7 +9,7 @@ docker:
 environment:
   TESTID: 'fixture'
   SLACK_PASS_TEMPLATE: |
-    cat templates/slack_pass_template.json
+    <<include(templates/slack_pass_template.json)>>
   # SLACK_FAIL_TEMPLATE: *slack_fail_template
   TEST_TYPE: ':nightwatch:'
 working_directory: /app
