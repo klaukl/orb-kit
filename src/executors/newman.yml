@@ -7,6 +7,7 @@ docker:
     username: $DOCKERHUB_USERNAME
     password: $DOCKERHUB_PASSWORD
 environment:
-  SLACK_PASS_TEMPLATE: \<< pipeline.filepath("src/templates/slack_pass_template.json") >>
+  SLACK_PASS_TEMPLATE: |
+    $(cat src/templates/slack_pass_template.json)
   # SLACK_FAIL_TEMPLATE: *slack_fail_template
   TEST_TYPE: ':postman:'
